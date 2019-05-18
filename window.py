@@ -34,9 +34,9 @@ class Window(QStackedWidget):
         gridLayout = QGridLayout(gridLayoutWidget)
         gridLayout.setContentsMargins(300, 40, 300, 40)
 
-        fields = {'website':'', 'username':'', 'password':''}
+        fields = ['website', 'username', 'password', 'extra']
         idx = 1
-        for (field, _) in fields.items():
+        for field in fields:
             label = QLabel(gridLayoutWidget)
             label.setText(field.capitalize() + ': ')
             gridLayout.addWidget(label,idx,0,1,1)

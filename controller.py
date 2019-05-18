@@ -18,16 +18,26 @@ class WindowController():
         self.window.setCurrentIndex(2)
 
     def saveNewPassword(self):
-        fields = ['website', 'username', 'password']
-        for field in fields:
+        fields = {'website': {'value':'', 'required': True},
+                'username': {'value': '', 'required': True},
+                'password': {'value': '', 'required': True},
+                'extra': {'value': '', 'required': False}}
+        values = {}
+        for (field, req) in fields.items():
             val = self.window.findChild(QLineEdit, field).text()
-            if len(val) == 0:
-                self.window.displayError('Error: {} field is empty.'.format(field))
+            if len(val) == 0 and req["required"]:
+                self.window.displayError('Error: {} is empty.'.format(field))
                 return
+            else:
+                values[field] = val
         self.password = self.askPassword()
 
         try:
             self.isPasswordOk()
+            self.storage.insertPassword(values, self.password)
+        except NoPasswordSetException as ex:
+            self.storage.setMasterPassword(self.password)
+            return
         except Exception as e:
             self.window.displayError(str(e))
             return
@@ -37,17 +47,21 @@ class WindowController():
         self.accessIndexPage()
 
     def askPassword(self):
-        password = self.window.promptPassword()
+        return self.window.promptPassword()
 
     def isPasswordOk(self):
         if self.password is None or len(self.password) == 0:
-            raise Exception('You did not provide a password')
+            raise Exception('You did not provide a password.')
 
         stored_password = self.storage.getMasterPassword()
 
-        if stored_password is not None:
-            if bcrypt.checkpw(self.password, stored_password) is False:
-                raise Exception('Your master password is not ok')
+        if stored_password is not None and len(stored_password) > 0:
+            if bcrypt.checkpw(self.password.encode('utf-8'), stored_password.encode('utf-8')) is False:
+                raise Exception('Provided password does not match.')
         else:
-            raise Exception('Your database does not contain a master password')
+            raise NoPasswordSetException('Your database does not contain a master password.')
         return True
+
+class NoPasswordSetException(Exception):
+    def __init__(self,*args,**kwargs):
+        Exception.__init__(self,*args,**kwargs)
