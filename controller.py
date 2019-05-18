@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLineEdit, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QLineEdit
 
 class WindowController():
     def __init__(self, window):
@@ -19,20 +19,12 @@ class WindowController():
         for field in fields:
             val = self.window.findChild(QLineEdit, field).text()
             if len(val) == 0:
-                box = QMessageBox(self.window)
-                box.setText('Error: {} field is empty.'.format(field))
-                box.show()
-                box.exec()
+                self.window.displayError('Error: {} field is empty.'.format(field))
                 return
-        self.promptPassword()
+        self.askPassword()
         for field in fields:
             self.window.findChild(QLineEdit, field).setText(None)
         self.accessIndexPage()
 
-    def promptPassword(self):
-        alert = QInputDialog()
-        alert.setModal(True)
-        self.password, _ = alert.getText(self.window,
-            'Please insert database password',
-            'Your database password')
-        alert.show()
+    def askPassword(self):
+        password = self.window.promptPassword()

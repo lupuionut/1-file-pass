@@ -91,3 +91,19 @@ class Window(QStackedWidget):
             raise Exception('Your database does not contain a master password')
 
         return True
+
+    def promptPassword(self):
+        alert = QInputDialog()
+        alert.setModal(True)
+        password, _ = alert.getText(self,
+            'Please insert database password',
+            'Your database password')
+        alert.show()
+        return password
+
+    def displayError(self, err):
+        box = QMessageBox()
+        box.setText(err)
+        box.setModal(True)
+        box.show()
+        box.exec()
