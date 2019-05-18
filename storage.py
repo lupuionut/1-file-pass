@@ -1,31 +1,13 @@
-import sqlite3
-import os
+from PyQt5 import QtSql
 
 class Storage():
-    def __init__(self):
-        self.file = 'pass.db'
+    def __init__(self, path):
+        self.db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+        self.db.setDatabaseName(path)
 
-    def connect(self):
-        if os.path.isfile(self.file):
-            self.db = sqlite3.connect(self.file)
-        else:
-            self.db = None
-        return self
+        if not self.db.open():
+            raise Exception('Databasse is not open')
 
-    def close(self):
-        if self.db is not None:
-            self.db.close()
-
-    def getPassword(self):
-        query = 'SELECT encrypted, creation_date FROM main_password'
-        try:
-            self.connect()
-            cursor = self.db.cursor()
-            cursor.execute(query)
-            (password, _) = cursor.fetchone()
-        except Exception as e:
-            password = None
-            print(str(e))
-        finally:
-            self.close()
-        return password
+    def getMasterPassword(self):
+        query = QtSql.QSqlQuery('SELECT encrypted FROM main_password')
+        return query.record().value('encrypted')

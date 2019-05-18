@@ -2,9 +2,6 @@ from PyQt5.QtWidgets import \
     QLabel, QWidget, QStackedWidget,\
     QPushButton, QInputDialog, QMessageBox,\
     QGridLayout, QLineEdit
-import os
-import bcrypt
-import storage
 from controller import WindowController
 
 class Window(QStackedWidget):
@@ -13,7 +10,6 @@ class Window(QStackedWidget):
         self.resize(1200,600)
         self.setWindowTitle('1 file pass')
         self.setGeometry(130, 130, 1200, 600)
-        self.storage = storage.Storage()
         self.controller = WindowController(self)
 
     def addIndexPage(self):
@@ -70,7 +66,6 @@ class Window(QStackedWidget):
 
     def listPage(self):
         try:
-            self.isPasswordOk()
             self.setCurrentIndex(2)
         except Exception as e:
             alert = QMessageBox()
@@ -78,19 +73,6 @@ class Window(QStackedWidget):
             alert.show()
             alert.exec()
             self.setCurrentIndex(0)
-
-    def isPasswordOk(self):
-        if self.password is None:
-            raise Exception('You did not provide a password')
-
-        stored_password = self.storage.getPassword()
-        if stored_password is not None:
-            if bcrypt.checkpw(password, stored_password) is False:
-                raise Exception('Your master password is not ok')
-        else:
-            raise Exception('Your database does not contain a master password')
-
-        return True
 
     def promptPassword(self):
         alert = QInputDialog()
