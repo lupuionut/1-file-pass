@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import \
     QLabel, QWidget, QStackedWidget,\
     QPushButton, QInputDialog, QMessageBox,\
-    QGridLayout, QLineEdit
+    QGridLayout, QLineEdit, QListWidget
 from controller import WindowController
 
 class Window(QStackedWidget):
@@ -24,7 +24,7 @@ class Window(QStackedWidget):
         bList.setObjectName('list_passwords')
         bList.setText('List Passwords')
         bList.setGeometry(650,100,200,50)
-        bList.clicked.connect(self.listPage)
+        bList.clicked.connect(self.controller.accessListPasswordsPage)
         self.addWidget(page)
 
     def addNewPasswordPage(self):
@@ -57,22 +57,45 @@ class Window(QStackedWidget):
         self.addWidget(gridLayoutWidget)
 
     def addlistPasswordsPage(self):
-        page = QWidget()
-        page.setObjectName('page2')
-        label = QLabel(page)
-        label.setText('List passwords page')
-        label.setGeometry(500,100,100,100)
-        self.addWidget(page)
+        gridLayoutWidget = QWidget()
+        gridLayoutWidget.setGeometry(200, 100, 800, 50)
 
-    def listPage(self):
-        try:
-            self.setCurrentIndex(2)
-        except Exception as e:
-            alert = QMessageBox()
-            alert.setText(str(e))
-            alert.show()
-            alert.exec()
-            self.setCurrentIndex(0)
+        gridLayout = QGridLayout(gridLayoutWidget)
+        gridLayout.setContentsMargins(300, 40, 300, 40)
+        gridLayout.setObjectName('password_grid')
+
+        backButton = QPushButton(gridLayoutWidget)
+        backButton.setText('Cancel')
+        backButton.clicked.connect(self.controller.accessIndexPage)
+        gridLayout.addWidget(backButton, 0, 0, 1, 1)
+
+        deleteButton = QPushButton(gridLayoutWidget)
+        deleteButton.setText('Delete selected')
+        deleteButton.clicked.connect(self.controller.accessIndexPage)
+        gridLayout.addWidget(deleteButton, 0, 1, 1, 1)
+
+        search = QLineEdit(gridLayoutWidget)
+        search.setObjectName('search_input')
+        search.setPlaceholderText('Filter term')
+        gridLayout.addWidget(search, 0, 2, 1, 1)
+
+        searchButton = QPushButton(gridLayoutWidget)
+        searchButton.setText('Filter')
+        searchButton.clicked.connect(self.controller.accessIndexPage)
+        gridLayout.addWidget(searchButton, 0, 3, 1, 1)
+        
+        self.addWidget(gridLayoutWidget)
+
+    def appendPasswords(self):
+        gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
+        items = self.controller.listPasswords()
+        passList = QListWidget()
+        passList.setGeometry(200, 100, 800, 50)
+        idx = 0
+        for item in items:
+            passList.insertItem(idx, str(item["id"]))
+            idx += 1
+        gridLayoutWidget.addWidget(passList, 1, 0, 1, 4)
 
     def promptPassword(self):
         alert = QInputDialog()

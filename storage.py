@@ -2,7 +2,7 @@ from PyQt5 import QtSql
 from datetime import datetime
 import bcrypt
 import scrypt
-from base64 import b64encode
+from base64 import b64encode, b64decode
 
 class Storage():
     def __init__(self, path):
@@ -42,3 +42,20 @@ class Storage():
             query.exec()
         else:
             raise Exception('Number of fields should be 3')
+
+    def listPasswords(self, master_password):
+        passwords = []
+        query = QtSql.QSqlQuery()
+        query.prepare('SELECT * FROM passwords')
+        query.exec()
+        while query.next():
+            password = {}
+            password['id'] = query.value('id')
+            password['url'] = query.value('url')
+            password['username'] = query.value('username')
+            if master_password is not None:
+                password['password'] = scrypt.decrypt(b64decode(query.value('password')), master_password)
+            password['extra'] = query.value('extra')
+            passwords.append(password)
+
+        return passwords

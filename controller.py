@@ -6,6 +6,7 @@ class WindowController():
     def __init__(self, window):
         self.window = window
         self.password = None
+        self.authorized = False
         self.storage = storage.Storage('pass.db')
 
     def accessIndexPage(self):
@@ -15,6 +16,17 @@ class WindowController():
         self.window.setCurrentIndex(1)
 
     def accessListPasswordsPage(self):
+        if self.authorized == False:
+            self.password = self.askPassword()
+            try:
+                self.isPasswordOk()
+            except NoPasswordSetException as ex:
+                self.storage.setMasterPassword(self.password)
+                return
+            except Exception as e:
+                self.window.displayError(str(e))
+                return
+        self.window.appendPasswords()
         self.window.setCurrentIndex(2)
 
     def saveNewPassword(self):
@@ -60,7 +72,12 @@ class WindowController():
                 raise Exception('Provided password does not match.')
         else:
             raise NoPasswordSetException('Your database does not contain a master password.')
+
+        self.authorized = True
         return True
+
+    def listPasswords(self):
+        return self.storage.listPasswords(self.password)
 
 class NoPasswordSetException(Exception):
     def __init__(self,*args,**kwargs):
