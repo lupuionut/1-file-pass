@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import \
     QLabel, QWidget, QStackedWidget,\
     QPushButton, QInputDialog, QMessageBox,\
-    QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem
+    QGridLayout, QLineEdit, QTableWidget,\
+    QTableWidgetItem, QHeaderView
 from controller import WindowController
 
 class Window(QStackedWidget):
@@ -58,10 +59,10 @@ class Window(QStackedWidget):
 
     def addlistPasswordsPage(self):
         gridLayoutWidget = QWidget()
-        gridLayoutWidget.setGeometry(200, 100, 800, 50)
+        gridLayoutWidget.setGeometry(100, 100, 1000, 50)
 
         gridLayout = QGridLayout(gridLayoutWidget)
-        gridLayout.setContentsMargins(300, 40, 300, 40)
+        gridLayout.setContentsMargins(100, 40, 100, 40)
         gridLayout.setObjectName('password_grid')
 
         backButton = QPushButton(gridLayoutWidget)
@@ -88,8 +89,10 @@ class Window(QStackedWidget):
 
     def appendPasswords(self):
         items = self.controller.listPasswords()
+        columns = len(items)
         gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
-        passList = QTableWidget(len(items), 5)
+        passList = QTableWidget(columns, 5)
+        tHeader = passList.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         headers = ['id', 'url', 'username', 'password', 'extra']
         idx = 0
         for header in headers:
