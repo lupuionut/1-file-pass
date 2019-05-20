@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QLineEdit
+from PyQt5.Qt import QClipboard, QApplication
 import bcrypt
 import storage
 
@@ -78,6 +79,11 @@ class WindowController():
 
     def listPasswords(self):
         return self.storage.listPasswords(self.password)
+
+    def cellItemClicked(self, item):
+        if item.objectName() == 'cell_copy':
+            clipboard = QApplication.clipboard()
+            clipboard.setText(item.data().text(), QClipboard.Clipboard)
 
 class NoPasswordSetException(Exception):
     def __init__(self,*args,**kwargs):

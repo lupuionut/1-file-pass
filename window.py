@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import \
     QLabel, QWidget, QStackedWidget,\
     QPushButton, QInputDialog, QMessageBox,\
     QGridLayout, QLineEdit, QTableWidget,\
-    QTableWidgetItem, QHeaderView
+    QTableWidgetItem, QHeaderView, QMenu, QAction
+from PyQt5.QtCore import QVariant
 from controller import WindowController
 
 class Window(QStackedWidget):
@@ -92,6 +93,7 @@ class Window(QStackedWidget):
         columns = len(items)
         gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
         passList = QTableWidget(columns, 5)
+        passList.setObjectName('password_list_widget')
         tHeader = passList.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         headers = ['id', 'url', 'username', 'password', 'extra']
         idx = 0
@@ -107,6 +109,8 @@ class Window(QStackedWidget):
             passList.setItem(idx, 3, QTableWidgetItem(str(item["password"])))
             passList.setItem(idx, 4, QTableWidgetItem(str(item["extra"])))
             idx += 1
+        passList.setContextMenuPolicy(3)
+        passList.customContextMenuRequested.connect(self.openCellMenu)
         gridLayoutWidget.addWidget(passList, 1, 0, 1, 4)
 
     def promptPassword(self):
@@ -124,3 +128,14 @@ class Window(QStackedWidget):
         box.setModal(True)
         box.show()
         box.exec()
+
+    def openCellMenu(self, pos):
+        tableWidget = self.findChild(QTableWidget, 'password_list_widget')
+        item = tableWidget.itemAt(pos)
+        menu = QMenu()
+        copy = QAction('copy')
+        copy.setData(QVariant(item))
+        copy.setObjectName('cell_copy')
+        menu.addAction(copy)
+        menu.triggered.connect(self.controller.cellItemClicked)
+        menu.exec_(tableWidget.mapToGlobal(pos))
