@@ -32,7 +32,7 @@ class Storage():
 
     def insertPassword(self, values, master_password):
         if (len(values) == 4):
-            password = b64encode(scrypt.encrypt(values['password'], master_password)).decode('utf-8')
+            password = b64encode(scrypt.encrypt(values['password'], master_password, maxtime=0.05)).decode('utf-8')
             query = QtSql.QSqlQuery()
             query.prepare('INSERT INTO passwords(id, url, username, password, extra) VALUES (NULL, :url, :username, :password, :extra)')
             query.bindValue(':url', values['website'])

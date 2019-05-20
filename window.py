@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import \
     QLabel, QWidget, QStackedWidget,\
     QPushButton, QInputDialog, QMessageBox,\
-    QGridLayout, QLineEdit, QListWidget
+    QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem
 from controller import WindowController
 
 class Window(QStackedWidget):
@@ -87,13 +87,22 @@ class Window(QStackedWidget):
         self.addWidget(gridLayoutWidget)
 
     def appendPasswords(self):
-        gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
         items = self.controller.listPasswords()
-        passList = QListWidget()
-        passList.setGeometry(200, 100, 800, 50)
+        gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
+        passList = QTableWidget(len(items), 5)
+        headers = ['id', 'url', 'username', 'password', 'extra']
+        idx = 0
+        for header in headers:
+            itemWidget = QTableWidgetItem(header)
+            passList.setHorizontalHeaderItem(idx, QTableWidgetItem(header))
+            idx += 1
         idx = 0
         for item in items:
-            passList.insertItem(idx, str(item["id"]))
+            passList.setItem(idx, 0, QTableWidgetItem(str(item["id"])))
+            passList.setItem(idx, 1, QTableWidgetItem(str(item["url"])))
+            passList.setItem(idx, 2, QTableWidgetItem(str(item["username"])))
+            passList.setItem(idx, 3, QTableWidgetItem(str(item["password"])))
+            passList.setItem(idx, 4, QTableWidgetItem(str(item["extra"])))
             idx += 1
         gridLayoutWidget.addWidget(passList, 1, 0, 1, 4)
 
