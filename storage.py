@@ -65,3 +65,22 @@ class Storage():
         query.prepare('DELETE FROM passwords WHERE id=:id')
         query.bindValue(':id', id)
         query.exec()
+
+    def listFilterPasswords(self, master_password, search):
+        passwords = []
+        query = QtSql.QSqlQuery()
+        query.prepare('SELECT * FROM passwords WHERE url LIKE :url OR username LIKE :username')
+        query.bindValue(':url', '%{}%'.format(search))
+        query.bindValue(':username', '%{}%'.format(search))
+        query.exec()
+        while query.next():
+            password = {}
+            password['id'] = query.value('id')
+            password['url'] = query.value('url')
+            password['username'] = query.value('username')
+            if master_password is not None:
+                password['password'] = scrypt.decrypt(b64decode(query.value('password')), master_password)
+            password['extra'] = query.value('extra')
+            passwords.append(password)
+
+        return passwords

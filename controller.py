@@ -93,6 +93,19 @@ class WindowController():
                 self.storage.deletePassword(id)
                 item.tableWidget().removeRow(item.row())
 
+    def resetPasswordList(self):
+        self.window.findChild(QLineEdit, 'search_input').setText('')
+        self.window.removePasswords()
+        items = self.listPasswords()
+        self.window.appendPasswords(items)
+
+    def filterPasswordList(self):
+        search = self.window.findChild(QLineEdit, 'search_input').text()
+        if len(search) > 0 and search is not None:
+            self.window.removePasswords()
+            items = self.storage.listFilterPasswords(self.password, search)
+            self.window.appendPasswords(items)
+
 class NoPasswordSetException(Exception):
     def __init__(self,*args,**kwargs):
         Exception.__init__(self,*args,**kwargs)

@@ -78,34 +78,46 @@ class Window(QStackedWidget):
 
         searchButton = QPushButton(gridLayoutWidget)
         searchButton.setText('Filter')
-        searchButton.clicked.connect(self.controller.accessIndexPage)
+        searchButton.clicked.connect(self.controller.filterPasswordList)
         gridLayout.addWidget(searchButton, 0, 3, 1, 1)
-        
+
+        resetButton = QPushButton(gridLayoutWidget)
+        resetButton.setText('Reset list')
+        resetButton.clicked.connect(self.controller.resetPasswordList)
+        gridLayout.addWidget(resetButton, 0, 4, 1, 1)
+
+        self.passList = QTableWidget()
+        self.passList.setObjectName('password_list_widget')
+        self.passList.setColumnCount(5)
+        self.passList.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.passList.setContextMenuPolicy(3)
+        self.passList.customContextMenuRequested.connect(self.openCellMenu)
+        gridLayout.addWidget(self.passList, 1, 0, 1, 5)
+
         self.addWidget(gridLayoutWidget)
 
     def appendPasswords(self, items):
-        columns = len(items)
-        gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
-        passList = QTableWidget(columns, 5)
-        passList.setObjectName('password_list_widget')
-        tHeader = passList.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.passList.setRowCount(len(items))
+        self.passList.setColumnCount(5)
         headers = ['id', 'url', 'username', 'password', 'extra']
-        idx = 0
-        for header in headers:
-            itemWidget = QTableWidgetItem(header)
-            passList.setHorizontalHeaderItem(idx, QTableWidgetItem(header))
-            idx += 1
+        self.passList.setHorizontalHeaderLabels(headers)
         idx = 0
         for item in items:
-            passList.setItem(idx, 0, QTableWidgetItem(str(item["id"])))
-            passList.setItem(idx, 1, QTableWidgetItem(str(item["url"])))
-            passList.setItem(idx, 2, QTableWidgetItem(str(item["username"])))
-            passList.setItem(idx, 3, QTableWidgetItem(str(item["password"])))
-            passList.setItem(idx, 4, QTableWidgetItem(str(item["extra"])))
+            self.passList.setItem(idx, 0, QTableWidgetItem(str(item["id"])))
+            self.passList.setItem(idx, 1, QTableWidgetItem(str(item["url"])))
+            self.passList.setItem(idx, 2, QTableWidgetItem(str(item["username"])))
+            self.passList.setItem(idx, 3, QTableWidgetItem(str(item["password"])))
+            self.passList.setItem(idx, 4, QTableWidgetItem(str(item["extra"])))
             idx += 1
-        passList.setContextMenuPolicy(3)
-        passList.customContextMenuRequested.connect(self.openCellMenu)
-        gridLayoutWidget.addWidget(passList, 1, 0, 1, 4)
+
+    def removePasswords(self):
+        rows = self.passList.rowCount()
+        columns = self.passList.columnCount()
+
+        for row in range(rows):
+            self.passList.removeRow(0)
+        for column in range(columns):
+            self.passList.removeColumn(0)
 
     def promptPassword(self):
         alert = QInputDialog()
