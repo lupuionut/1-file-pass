@@ -83,8 +83,7 @@ class Window(QStackedWidget):
         
         self.addWidget(gridLayoutWidget)
 
-    def appendPasswords(self):
-        items = self.controller.listPasswords()
+    def appendPasswords(self, items):
         columns = len(items)
         gridLayoutWidget = self.findChild(QGridLayout, 'password_grid')
         passList = QTableWidget(columns, 5)

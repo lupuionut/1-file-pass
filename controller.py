@@ -27,7 +27,8 @@ class WindowController():
             except Exception as e:
                 self.window.displayError(str(e))
                 return
-        self.window.appendPasswords()
+        items = self.listPasswords()
+        self.window.appendPasswords(items)
         self.window.setCurrentIndex(2)
 
     def saveNewPassword(self):
