@@ -132,10 +132,11 @@ class Window(QStackedWidget):
     def openCellMenu(self, pos):
         tableWidget = self.findChild(QTableWidget, 'password_list_widget')
         item = tableWidget.itemAt(pos)
-        menu = QMenu()
-        copy = QAction('copy')
-        copy.setData(QVariant(item))
-        copy.setObjectName('cell_copy')
-        menu.addAction(copy)
-        menu.triggered.connect(self.controller.cellItemClicked)
-        menu.exec_(tableWidget.mapToGlobal(pos))
+        if item is not None:
+            menu = QMenu()
+            copy = QAction('copy')
+            copy.setData(QVariant(item))
+            copy.setObjectName('cell_copy')
+            menu.addAction(copy)
+            menu.triggered.connect(self.controller.cellItemClicked)
+            menu.exec_(tableWidget.mapToGlobal(pos))
