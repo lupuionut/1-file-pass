@@ -16,6 +16,7 @@ class Window(QStackedWidget):
 
     def addIndexPage(self):
         page = QWidget()
+        page.setWindowTitle('1 File Password')
         page.setObjectName('page0')
         bNew = QPushButton(page)
         bNew.setObjectName('new_password')
