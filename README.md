@@ -1,6 +1,14 @@
 # 1-file-pass
-Basic password manager to list/add encrypted passwords with a Qt GUI. Passwords are stored in a single file, a sqlite db.
-Each password is encrypted using scrypt library with a master password that is stored in the db, encrpyted.
+Basic password manager. It keeps your passwords encrypted, using scrypt. Makes use of a master password for listing/password encryption.
+
+The GUI is built using PyQt library.
+
+What you can do:
+* add a new entry containing url, username, password and extra info
+* list all entries
+* filter entries by username/url
+* copy to clipboard a certain password
+* remove an entry from the database
 
 ## Instructions
 Download repo. Navigate to directory. Run **make install**. Run the executable from dist folder.
@@ -9,6 +17,10 @@ cd /path/to/1-file-pass
 make install
 ./dist/1fpass
 ```
+
+When you first execute the program, it will automatically generate a .db
+file where all your entries will get stored. When you add a new entry,
+you will be asked for a database password (the master password). If it's the first time, this master password is not set, so whatever you use will become your database password, in order to list all your entries or add new entry.
 
 ## Screenshots
 
