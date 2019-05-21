@@ -59,3 +59,9 @@ class Storage():
             passwords.append(password)
 
         return passwords
+
+    def deletePassword(self, id):
+        query = QtSql.QSqlQuery()
+        query.prepare('DELETE FROM passwords WHERE id=:id')
+        query.bindValue(':id', id)
+        query.exec()

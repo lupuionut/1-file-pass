@@ -80,10 +80,17 @@ class WindowController():
     def listPasswords(self):
         return self.storage.listPasswords(self.password)
 
-    def cellItemClicked(self, item):
-        if item.objectName() == 'cell_copy':
+    def cellItemClicked(self, action):
+        item = action.data()
+        if action.objectName() == 'cell_copy':
             clipboard = QApplication.clipboard()
-            clipboard.setText(item.data().text(), QClipboard.Clipboard)
+            clipboard.setText(item.text(), QClipboard.Clipboard)
+        elif action.objectName() == 'delete_entry':
+            response = self.window.confirmChange()
+            if (response == 1024):
+                id = int(item.text())
+                self.storage.deletePassword(id)
+                item.tableWidget().removeRow(item.row())
 
 class NoPasswordSetException(Exception):
     def __init__(self,*args,**kwargs):
