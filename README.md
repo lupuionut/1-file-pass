@@ -8,3 +8,12 @@ Download repo. Navigate to directory. Run **make install**. Run the executable f
 cd /path/to/1-file-pass
 make install
 ./dist/1fpass
+```
+
+## Screenshots
+
+![Dashboard](https://i.imgur.com/cVB2tFs.png)
+
+![Adding a new password](https://i.imgur.com/91prdme.png)
+
+![Display passwords](https://i.imgur.com/OPS8tQJ.png)
