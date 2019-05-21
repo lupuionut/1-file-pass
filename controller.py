@@ -2,13 +2,15 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.Qt import QClipboard, QApplication
 import bcrypt
 import storage
+import os, sys
 
 class WindowController():
     def __init__(self, window):
         self.window = window
         self.password = None
         self.authorized = False
-        self.storage = storage.Storage('pass.db')
+        path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/pass.db'
+        self.storage = storage.Storage(path)
 
     def accessIndexPage(self):
         self.window.setCurrentIndex(0)
@@ -51,7 +53,7 @@ class WindowController():
             self.storage.insertPassword(values, self.password)
         except NoPasswordSetException as ex:
             self.storage.setMasterPassword(self.password)
-            return
+            self.storage.insertPassword(values, self.password)
         except Exception as e:
             self.window.displayError(str(e))
             return

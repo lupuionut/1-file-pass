@@ -12,6 +12,14 @@ class Storage():
         if not self.db.open():
             raise Exception('Databasse is not open')
 
+        if len(self.db.tables()) == 0:
+            self.createTables()
+
+    def createTables(self):
+        query = QtSql.QSqlQuery()
+        query.exec('CREATE TABLE "main_password" ("encrypted" TEXT NOT NULL, "creation_date" TEXT NOT NULL DEFAULT 0)')
+        query.exec('CREATE TABLE "passwords" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "url" TEXT NOT NULL, "username" TEXT NOT NULL,"password"	TEXT NOT NULL,"extra" TEXT NOT NULL DEFAULT "")')
+
     def getMasterPassword(self):
         password = None
         query = QtSql.QSqlQuery()
