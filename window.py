@@ -70,12 +70,7 @@ class Window(QStackedWidget):
         backButton.setText('Cancel')
         backButton.clicked.connect(self.controller.accessIndexPage)
         gridLayout.addWidget(backButton, 0, 0, 1, 1)
-
-        deleteButton = QPushButton(gridLayoutWidget)
-        deleteButton.setText('Delete selected')
-        deleteButton.clicked.connect(self.controller.accessIndexPage)
-        gridLayout.addWidget(deleteButton, 0, 1, 1, 1)
-
+        
         search = QLineEdit(gridLayoutWidget)
         search.setObjectName('search_input')
         search.setPlaceholderText('Filter term')
