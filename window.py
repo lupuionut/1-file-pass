@@ -161,3 +161,9 @@ class Window(QStackedWidget):
         box.show()
         box.exec()
         return box.result()
+
+    def toggleTray(self):
+        if self.isVisible() == True:
+            self.hide()
+        else:
+            self.show()
