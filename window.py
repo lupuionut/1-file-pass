@@ -13,6 +13,7 @@ class Window(QStackedWidget):
         self.setWindowTitle('1 file pass')
         self.setGeometry(130, 130, 1200, 600)
         self.controller = WindowController(self)
+        self.setStyleSheet("background-color: #131313;color:#eee;")
 
     def addIndexPage(self):
         page = QWidget()
@@ -45,6 +46,7 @@ class Window(QStackedWidget):
             gridLayout.addWidget(label,idx,0,1,1)
             in_field = QLineEdit(gridLayoutWidget)
             in_field.setObjectName(field)
+            in_field.setStyleSheet("border:1px solid #ccc;padding:3px;")
             gridLayout.addWidget(in_field,idx,1,1,1)
             idx += 1
 
@@ -75,10 +77,12 @@ class Window(QStackedWidget):
         search = QLineEdit(gridLayoutWidget)
         search.setObjectName('search_input')
         search.setPlaceholderText('Filter term')
+        search.setStyleSheet("border:1px solid #ccc;padding:3px;")
         gridLayout.addWidget(search, 0, 2, 1, 1)
 
         searchButton = QPushButton(gridLayoutWidget)
         searchButton.setText('Filter')
+        searchButton.setDefault(True)
         searchButton.clicked.connect(self.controller.filterPasswordList)
         gridLayout.addWidget(searchButton, 0, 3, 1, 1)
 
