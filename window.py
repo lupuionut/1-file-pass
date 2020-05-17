@@ -13,7 +13,7 @@ class Window(QStackedWidget):
         self.setWindowTitle('1 file pass')
         self.setGeometry(130, 130, 1200, 600)
         self.controller = WindowController(self)
-        self.setStyleSheet("background-color: #131313;color:#eee;")
+        self.setStyleSheet("background-color: #242424;color:#eee;")
 
     def addIndexPage(self):
         page = QWidget()
