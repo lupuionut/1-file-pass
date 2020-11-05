@@ -14,9 +14,11 @@ class Window(QStackedWidget):
         self.setGeometry(130, 130, 1200, 600)
         self.controller = WindowController(self)
         self.setStyleSheet("background-color: #242424;color:#eee;")
+        self.setContentsMargins(50,0,50,0)
 
     def addIndexPage(self):
         page = QWidget()
+        grid = QGridLayout(page)
         page.setWindowTitle('1 File Password')
         page.setObjectName('page0')
         bNew = QPushButton(page)
@@ -29,6 +31,9 @@ class Window(QStackedWidget):
         bList.setText('List Passwords')
         bList.setGeometry(650,100,200,50)
         bList.clicked.connect(self.controller.accessListPasswordsPage)
+        grid.addWidget(bNew, 0, 0)
+        grid.addWidget(bList, 0, 1)
+
         self.addWidget(page)
 
     def addNewPasswordPage(self):
@@ -36,7 +41,6 @@ class Window(QStackedWidget):
         gridLayoutWidget = QWidget()
         gridLayoutWidget.setGeometry(200, 100, 800, 50)
         gridLayout = QGridLayout(gridLayoutWidget)
-        gridLayout.setContentsMargins(300, 40, 300, 40)
 
         fields = ['website', 'username', 'password', 'extra']
         idx = 1
@@ -66,14 +70,13 @@ class Window(QStackedWidget):
         gridLayoutWidget.setGeometry(100, 100, 1000, 50)
 
         gridLayout = QGridLayout(gridLayoutWidget)
-        gridLayout.setContentsMargins(100, 40, 100, 40)
         gridLayout.setObjectName('password_grid')
 
         backButton = QPushButton(gridLayoutWidget)
         backButton.setText('Cancel')
         backButton.clicked.connect(self.controller.accessIndexPage)
         gridLayout.addWidget(backButton, 0, 0, 1, 1)
-        
+
         search = QLineEdit(gridLayoutWidget)
         search.setObjectName('search_input')
         search.setPlaceholderText('Filter term')
